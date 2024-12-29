@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'blogging_app',
 ]
 
 MIDDLEWARE = [
@@ -76,10 +77,15 @@ WSGI_APPLICATION = 'blogging_platform_api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'Blog',    # Replace with your database name
+        'USER': 'johndoe',         # Replace with your MySQL username
+        'PASSWORD': '@johndoe',     # Replace with your MySQL password
+        'HOST': 'localhost',             # Or IP address of your MySQL server
+        'PORT': '3306',                  # Default MySQL port
     }
 }
+
 
 
 # Password validation

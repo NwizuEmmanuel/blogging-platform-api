@@ -3,12 +3,18 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import BlogSerializer
+from django.db.models import Q
 
 # Create your views here.
 @api_view(["POST", "GET"])
 def blog_list(request):
+    term = request.GET.get("term", "")
+
     if request.method == "GET":
-        blogs = Blog.objects.all()
+        if term:
+            blogs = Blog.objects.filter(Q(title__icontains=term) | Q(content__icontains=term) | Q(category__icontains=term))
+        else:
+            blogs = Blog.objects.all()
         serializer = BlogSerializer(blogs, many=True)
         return Response(serializer.data)
     elif request.method == "POST":
@@ -39,3 +45,11 @@ def blog_detail(request, pk):
     elif request.method == "DELETE":
         blog.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(["GET"])
+def blog_search(request, term):
+    if request.method == "GET":
+        blog = Blog.objects.filter(Q(title__contains=term) | Q(content__contains=term) | Q(category__contains=term))
+        serializer = BlogSerializer(blog, many=True)
+        return Response(serializer.data)
+    return Response(status=status.HTTP_204_NO_CONTENT)
